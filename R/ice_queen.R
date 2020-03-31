@@ -7,9 +7,8 @@ ice_queen <- function(dir = NULL, ...) {
   dir <- check_dir(dir)
   file <- file.path(dir, "ice_queen.png")
 
-  set.seed(123)
-
-  dat <- jasmines::entity_heart(grain = 100) %>%
+  dat <- jasmines::use_seed(123) %>%
+    jasmines::entity_heart(grain = 100) %>%
     dplyr::mutate(x = x * 100, y = y * 100) %>%
     jasmines::unfold_meander(
       iterations = 300,
@@ -39,12 +38,14 @@ ice_queen <- function(dir = NULL, ...) {
       )
     )
 
-  dat %>% jasmines::style_ribbon(
-    alpha_init = .1,
-    size = .25,
-    seed_col = "#ffffff88",
-    palette = jasmines::palette_manual("#ffffff33")
-  ) %>% jasmines::export_image(file)
+  dat %>%
+    jasmines::style_ribbon(
+      alpha = c(.1, 0),
+      size = .25,
+      palette = jasmines::palette_manual("#ffffff33")
+    ) %>%
+    jasmines::style_overlay(border = "#ffffff88") %>%
+    jasmines::export_image(file)
 
   cat("image written to:", file, "\n")
   return(invisible(NULL))

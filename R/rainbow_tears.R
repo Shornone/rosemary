@@ -7,13 +7,12 @@ rainbow_tears <- function(dir = NULL, ...) {
   dir <- check_dir(dir)
   file <- file.path(dir, "rainbow_tears.png")
 
-  set.seed(2)
 
   pal <- function(n, alpha, ...) {
     c("#00000000", grDevices::rainbow(n = n-1, alpha = alpha, ...))
   }
-  fname <- "~/Desktop/rain.png"
 
+  jasmines::use_seed(2) %>%
   jasmines::scene_mix(
     n = 30,
     entity = "droplet",
@@ -30,17 +29,15 @@ rainbow_tears <- function(dir = NULL, ...) {
     ) %>%
     jasmines::unfold_tempest(
       iterations = 100,
-      scale = .005,
-      seed = 2
+      scale = .005
     ) %>%
     jasmines::unfold_inside() %>%
     dplyr::mutate(order = 1 + (inside == 1)*id) %>%
     jasmines::style_ribbon(
       palette = pal,
-      seed_fill = "#00000044",
-      alpha_init = .8,
-      alpha_decay = .025
+      alpha = c(.8, .025),
     ) %>%
+    jasmines::style_overlay(fill = "#00000044") %>%
     jasmines::export_image(file)
 
   cat("image written to:", file, "\n")
